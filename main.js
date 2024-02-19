@@ -3,7 +3,7 @@ let news = []
 
 const getLatestNews = async () => {
   const url = new URL(
-    `http://times-node-env.eba-appvq3ef.ap-northeast-2.elasticbeanstalk.com/top-headlines?q=아이유&country=us&apiKey=${API_KEY}`
+    `https://swlee-times.netlify.app/top-headlines?q=아이유&country=us&apiKey=${API_KEY}`
   );
 
   const response = await fetch(url); // await를 하면 비동기로 되기 때문에 함수에 async를 해야함.
