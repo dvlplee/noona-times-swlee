@@ -1,0 +1,56 @@
+.header-line {
+  /* 윗공간 주기 */
+  margin-top: 1em;
+  /* 가로로 가운데 정렬. 반드시 부모태그에 적용하기! */
+  display: flex;
+  justify-content: center;
+}
+
+.header-line svg {
+  width: 400px;
+}
+.menus {
+  margin-top: 1em;
+  display: flex;
+  justify-content: center;
+  /* 버튼을 모아주기 */
+  flex-wrap: wrap;
+  border-top: 1px solid #ebebeb;
+  border-bottom: 4px double black;
+}
+
+.menus button {
+  border: none;
+  background: none;
+  margin: 5px;
+}
+
+/* :hover 마우스를 올렸을 때 스타일 */
+.menus button:hover {
+  background-color: beige;
+}
+
+.news-img-size {
+  /* 최대 부모넓이의 100% */
+  max-width: 100%;
+  max-height: 250px;
+}
+
+.news {
+  border-bottom: 2px solid black;
+}
+
+#menu-list {
+    display: none;
+    flex-direction: column;
+    background-color: #f8f9fa;
+    padding: 10px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1000;
+}
+
+
