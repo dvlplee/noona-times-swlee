@@ -1,16 +1,47 @@
 const API_KEY = "a13b75354b73410e83de429439c33c72";
 let newsList = []; // 뉴스정보를 리스트에 담는다.
+// 버튼을 가져와서 클릭이벤트주기
+const menus = document.querySelectorAll(".menus button");
+menus.forEach((menu) =>
+  menu.addEventListener("click", (event) => getNewsByCategory(event))
+);
 
 const getLatestNews = async () => {
   const url = new URL(
-    `https://swlee-times.netlify.app/top-headlines?country=us&apiKey=${API_KEY}`
+    `https://swlee-times.netlify.app/top-headlines?country=kr&apiKey=${API_KEY}`
   );
-
   const response = await fetch(url); // await를 하면 비동기로 되기 때문에 함수에 async를 해야함.
   const data = await response.json(); // body에서 json(파일형식)으로 뽑기
   newsList = data.articles;
   render();
   console.log("dddd", newsList); // fetch는 기다려야하기 때문에 pending 오류 발생.--->함수 앞에 await 쓰기.
+};
+
+// 카테고리별로 뉴스정보를 가져와서 보여주는 함수.
+const getNewsByCategory = async (event) => {
+  const category = event.target.textContent.toLowerCase();
+  console.log(category);
+  const url = new URL(
+    `https://swlee-times.netlify.app/top-headlines?country=kr&category=${category}&apiKey=${API_KEY}`
+  );
+  const response = await fetch(url);
+  const data = await response.json();
+  console.log(data);
+  newsList = data.articles;
+  render();
+};
+
+// 키워드를 입력하면 키워드별로 뉴스정보를 가져와서 보여주는 함수.
+const getNewsByKeyboard = async () => {
+  const keyword = document.getElementById("search-input").value;
+  console.log("keyword", keyword);
+  const url = new URL(
+    `https://swlee-times.netlify.app/top-headlines?country=kr&q=${keyword}&apiKey=${API_KEY}`
+  );
+  const response = await fetch(url);
+  const data = await response.json();
+  newsList = data.articles;
+  render();
 };
 // 그리기 함수
 const render = () => {
@@ -47,7 +78,31 @@ const render = () => {
 };
 getLatestNews();
 
+//1. 버튼들에 클릭이벤트주기
+//2. 카테고리별 뉴스 가져오기
+//3. 그 뉴스를 보여주기 render
+function toggleSearch() {
+  let searchInput = document.getElementById("search-input");
+  let searchButton = document.getElementById("search-button");
+  console.log("뭔데", searchInput.style.display, searchButton.style.display);
+  if (
+    searchInput.style.display === "none" &&
+    searchButton.style.display === "none"
+  ) {
+    console.log("나타남");
+    searchInput.style.display = "block";
+    searchButton.style.display = "block";
+  } else {
+    console.log("숨겨짐");
+    searchInput.style.display = "none";
+    searchButton.style.display = "none";
+  }
+}
+
 function toggleMenu() {
-    let menuList = document.getElementById("menu-list");
-    menuList.style.display = (menuList.style.display === "flex") ? "none" : "flex";
+  var sideMenu = document.getElementById("side-menu");
+  sideMenu.style.display =
+    sideMenu.style.display === "none" || sideMenu.style.display === ""
+      ? "block"
+      : "none";
 }

@@ -12,20 +12,20 @@
 </head>
 
 <body>
-    <!-- 돋보기추가 -->
-    <section>
-        <div class="parent">
+    <!-- 부트스트랩container는 가운데 넓이 안에 들어가게끔 해주는것 -->
+    <section class="container">
+        <div class="search-container">
             <button class="hamburger-btn" onclick="toggleMenu()">
                 <i class="fas fa-bars" style="color: #000000;"></i>
             </button>
-            <input class="input" type="type" placeholder="Search..." />
-            <button class="btn">
+            <button onclick="toggleSearch()">
                 <i class="fa-solid fa-magnifying-glass" style="color: #000000;"></i>
             </button>
+            <input id="search-input" placeholder="Search..." />
+            <button id="search-button" onclick="getNewsByKeyboard()">검색</button>
         </div>
-    </section>
-    <!-- 부트스트랩container 가운데 넓이 안에 들어가게끔 해주는것 -->
-    <section id="main" class="container">
+
+        </div>
         <section>
             <div class="header-line">
                 <svg viewBox="0 0 184 25" fill="#000">
@@ -34,24 +34,15 @@
                     </path>
                 </svg>
             </div>
-            <div class="menus" id="menu-list">
-                <button>Sport</button>
-                <button>Tech</button>
-                <button>World</button>
-                <button>Finance</button>
-                <button>Politics</button>
+            <div class="menus" id="side-menu">
                 <button>Business</button>
-                <button>Economics</button>
                 <button>Entertainment</button>
-                <button>Beauty</button>
-                <button>Travel</button>
-                <button>Music</button>
-                <button>Food</button>
+                <button>General</button>
+                <button>Health</button>
                 <button>Science</button>
-                <button>Gaming</button>
-                <button>Energy</button>
+                <button>Sports</button>
+                <button>Technology</button>
             </div>
-
         </section>
         <section id="news-board">
             <!-- 부트스트랩 grid 사용 : row, col-lg-4 ... -->
