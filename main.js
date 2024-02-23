@@ -6,42 +6,51 @@ menus.forEach((menu) =>
   menu.addEventListener("click", (event) => getNewsByCategory(event))
 );
 
+let url = new URL(
+  `https://swlee-times.netlify.app/top-headlines?country=kr&apiKey=${API_KEY}`
+);
+// 겹치는 부분 리펙토링해주기.
+const getNews = async () => {
+  try {
+    const response = await fetch(url); // await를 하면 비동기로 되기 때문에 함수에 async를 해야함. fetch는 기다려야하기 때문에 pending 오류 발생.--->함수 앞에 await 쓰기.
+    const data = await response.json(); // body에서 json(파일형식)으로 뽑기
+    if (response.status === 200) {
+      if (data.articles.length === 0) {
+        throw new Error("No result for this search");
+      }
+      newsList = data.articles;
+      render();
+    } else {
+      throw new Error(data.message);
+    }
+  } catch (error) {
+    errorRender(error.message);
+  }
+};
+
 const getLatestNews = async () => {
-  const url = new URL(
+  url = new URL(
     `https://swlee-times.netlify.app/top-headlines?country=kr&apiKey=${API_KEY}`
   );
-  const response = await fetch(url); // await를 하면 비동기로 되기 때문에 함수에 async를 해야함.
-  const data = await response.json(); // body에서 json(파일형식)으로 뽑기
-  newsList = data.articles;
-  render();
-  console.log("dddd", newsList); // fetch는 기다려야하기 때문에 pending 오류 발생.--->함수 앞에 await 쓰기.
+  getNews();
 };
 
 // 카테고리별로 뉴스정보를 가져와서 보여주는 함수.
 const getNewsByCategory = async (event) => {
   const category = event.target.textContent.toLowerCase();
-  console.log(category);
-  const url = new URL(
+  url = new URL(
     `https://swlee-times.netlify.app/top-headlines?country=kr&category=${category}&apiKey=${API_KEY}`
   );
-  const response = await fetch(url);
-  const data = await response.json();
-  console.log(data);
-  newsList = data.articles;
-  render();
+  getNews();
 };
 
 // 키워드를 입력하면 키워드별로 뉴스정보를 가져와서 보여주는 함수.
 const getNewsByKeyboard = async () => {
   const keyword = document.getElementById("search-input").value;
-  console.log("keyword", keyword);
-  const url = new URL(
+  url = new URL(
     `https://swlee-times.netlify.app/top-headlines?country=kr&q=${keyword}&apiKey=${API_KEY}`
   );
-  const response = await fetch(url);
-  const data = await response.json();
-  newsList = data.articles;
-  render();
+  getNews();
 };
 // 그리기 함수
 const render = () => {
@@ -72,33 +81,39 @@ const render = () => {
 </div>`
     )
     .join(""); // join으로 ,를 없애기 위해 배열을 스트링으로 바꾸기
-  console.log(newsHTML);
   // 어떤 Id에 붙일지 입력. innerHTML : 문자열을 HTML형식으로 붙여넣는다는 의미.
   document.getElementById("news-board").innerHTML = newsHTML;
+};
+
+const errorRender = (errorMessage) => {
+  const errorHTML = `<div class="alert alert-danger" role="alert">
+  ${errorMessage}
+</div>`;
+  document.getElementById("news-board").innerHTML = errorHTML;
 };
 getLatestNews();
 
 //1. 버튼들에 클릭이벤트주기
 //2. 카테고리별 뉴스 가져오기
 //3. 그 뉴스를 보여주기 render
+
+// 버튼을 누르면 input창, 버튼 나오기/숨기기
 function toggleSearch() {
   let searchInput = document.getElementById("search-input");
   let searchButton = document.getElementById("search-button");
-  console.log("뭔데", searchInput.style.display, searchButton.style.display);
   if (
-    searchInput.style.display === "none" &&
-    searchButton.style.display === "none"
+    searchInput.style.display === "none" ||
+    searchInput.style.display === ""
   ) {
-    console.log("나타남");
     searchInput.style.display = "block";
     searchButton.style.display = "block";
   } else {
-    console.log("숨겨짐");
     searchInput.style.display = "none";
     searchButton.style.display = "none";
   }
 }
 
+// 햄버거 버튼 클릭시 side메뉴 나오게 하기
 function toggleMenu() {
   var sideMenu = document.getElementById("side-menu");
   sideMenu.style.display =
@@ -106,3 +121,19 @@ function toggleMenu() {
       ? "block"
       : "none";
 }
+
+// let newsBoard = document.getElementById('news-board') // 나와야하는 태그 가져오기
+// let searchButton = document.getElementById("search-button") // 버튼
+
+// function alert(message, type) {
+//   var wrapper = document.createElement('div')
+//   wrapper.innerHTML = '<div class="alert alert-' + type + ' alert-dismissible" role="alert">' + message + '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>'
+//   newsBoard.append(wrapper)
+// }
+//  // 버튼 클릭시 띄울 이벤트
+// if (searchButton) {
+//     console.log("버튼클릭")
+//     searchButton.addEventListener('click', function () {
+//     alert('No matches for your search', 'success')
+//   })
+// }
