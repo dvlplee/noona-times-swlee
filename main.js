@@ -9,17 +9,30 @@ menus.forEach((menu) =>
 let url = new URL(
   `https://swlee-times.netlify.app/top-headlines?country=kr&apiKey=${API_KEY}`
 );
+
+let totalResults = 0;
+let page = 1;
+// 고정값
+const pageSize = 10;
+const groupSize = 5;
+
 // 겹치는 부분 리펙토링해주기.
 const getNews = async () => {
   try {
+    url.searchParams.set("page", page); // => &page=page
+    url.searchParams.set("pageSize", pageSize);
+
     const response = await fetch(url); // await를 하면 비동기로 되기 때문에 함수에 async를 해야함. fetch는 기다려야하기 때문에 pending 오류 발생.--->함수 앞에 await 쓰기.
     const data = await response.json(); // body에서 json(파일형식)으로 뽑기
+    console.log("ddd", data);
     if (response.status === 200) {
       if (data.articles.length === 0) {
         throw new Error("No result for this search");
       }
       newsList = data.articles;
+      totalResults = data.totalResults;
       render();
+      paginationRender();
     } else {
       throw new Error(data.message);
     }
@@ -90,6 +103,40 @@ const errorRender = (errorMessage) => {
   ${errorMessage}
 </div>`;
   document.getElementById("news-board").innerHTML = errorHTML;
+};
+
+const paginationRender = () => {
+  //totalResult,
+  //page
+  //pagesize
+  //groupsize
+  //totalpages
+  const totalPages = Math.ceil(totalResults / pageSize);
+  //pageGroup
+  const pageGroup = Math.ceil(page / groupSize);
+  //lastpage
+  const lastPage = pageGroup * groupSize;
+  //마지막 페이지그룹이 그룹사이즈보다 작다? lastpage = totalpage
+  if (lastPage > totalPages) {
+    lastPage = totalPages;
+  }
+  //firstpage
+  const firstPage =
+    lastPage - (groupSize - 1) <= 0 ? 1 : lastPage - (groupSize - 1);
+
+  let paginationHTML = ``;
+
+  for (let i = firstPage; i < lastPage; i++) {
+    paginationHTML += `<li class="page-item ${
+      i === page ? "active" : ""
+    }" onclick="moveToPage(${i})"><a class="page-link">${i}</a></li>`;
+  }
+  document.querySelector(".pagination").innerHTML = paginationHTML;
+};
+const moveToPage = (pageNum) => {
+  console.log("무ㅜ브도투페이지", pageNum);
+  page = pageNum;
+  getNews();
 };
 getLatestNews();
 
