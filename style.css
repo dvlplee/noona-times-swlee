@@ -51,15 +51,33 @@
   display: none;
 }
 
+#search-btn {
+  border: 1px solid #ccc;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
 #search-input {
-    display: none;
-    padding: 5px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+  display: none;
+  border: 1px solid #ccc;
+  padding: 10px;
+  border: none;
+  border-radius: 20px;
+  outline: none;
+}
+
+#search-input:focus {
+  border: 2px solid #3498db;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 #search-button {
   display: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  color: lightslategray;
+}
+
+#search-button:hover {
+  background-color: #2980b9; /* 마우스 호버 시 배경 색상 변경 */
+  color: black;
 }
 
 @media (max-width: 600px) {
